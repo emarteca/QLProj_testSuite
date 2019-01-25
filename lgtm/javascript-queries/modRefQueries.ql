@@ -1,3 +1,10 @@
+/**
+  * @name REF sets which do not correspond to those in the ModRefTagComments
+  * @kind problem
+  * @id javascript/broken-ref-sets-in-base-tests
+*/
+
+
 import javascript
 
 
