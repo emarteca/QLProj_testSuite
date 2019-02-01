@@ -115,12 +115,25 @@ predicate stmtsCanSwap( Stmt s1, Stmt s2) {
   forall ( Variable v | stmtReferences( s2, v) | not ( stmtsRefAndMod( s1, s2, v) or stmtsBothModify( s1, s2, v)))
 }
 
-from ModRefTagComment c1, ModRefTagComment c2, Stmt s1, Stmt s2
+Location stmtEarliestLocation( Stmt s1) {
+   result = min( Stmt s2 | 
+               s1.getBasicBlock() = s2.getBasicBlock() and stmtsCanSwap( s1, s2) |  
+                   s2.getLocation() order by s2.getLocation().getStartLine())
+}
+
+
+from ModRefTagComment c1, AwaitExpr ae1, Stmt s1
+  where s1 = ae1.getEnclosingStmt()
+    and sameFileSameLine( s1, c1)
+select s1, c1, stmtEarliestLocation( s1)
+
+
+/*from ModRefTagComment c1, ModRefTagComment c2, Stmt s1, Stmt s2
 	where sameFileSameLine( s1, c1) and sameFileSameLine( s2, c2)
     and s1.getBasicBlock() = s2.getBasicBlock()
 	and stmtsCanSwap( s1, s2)
 select c1, c2, s1, s2
-
+*/
 
 
 
